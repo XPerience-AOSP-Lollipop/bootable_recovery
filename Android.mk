@@ -139,6 +139,15 @@ LOCAL_LDFLAGS += -Wl,--no-fatal-warnings
 LOCAL_C_INCLUDES += system/extras/ext4_utils
 LOCAL_C_INCLUDES += external/openssl/include
 
+ifneq ($(BOARD_USE_NTFS_3G),false)
+LOCAL_CFLAGS += -DBOARD_USE_NTFS_3G
+LOCAL_STATIC_LIBRARIES += libmount.ntfs-3g libntfsfix.recovery libmkntfs.recovery libfuse-lite.recovery libntfs-3g.recovery
+endif
+
+ifneq ($(BOARD_USE_NTFS_3G),false)
+RECOVERY_LINKS += mkntfs ntfs-3g ntfsfix
+endif
+
 # Symlinks
 RECOVERY_LINKS := busybox getprop reboot sdcard setup_adbd setprop start stop vdc
 
@@ -308,4 +317,8 @@ include $(LOCAL_PATH)/minui/Android.mk \
     $(LOCAL_PATH)/applypatch/Android.mk \
     $(LOCAL_PATH)/voldclient/Android.mk
 
+endif
+
+ifneq ($(BOARD_USE_NTFS_3G),false)
+    include bootable/recovery/ntfs-3g/Android.mk
 endif
